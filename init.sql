@@ -1,8 +1,10 @@
-CREATE TABLE my_table (
+CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL
 );
 
-INSERT INTO my_table (name) VALUES ('Apple');
-INSERT INTO my_table (name) VALUES ('Banana');
-INSERT INTO my_table (name) VALUES ('Cherry');
+INSERT INTO products (name, price) VALUES
+('Laptop', 999.99),
+('Smartphone', 599.49),
+('Headphones', 129.99);
