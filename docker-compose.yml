@@ -1,34 +1,34 @@
-version: '3.8'
+#version: '3.8' # Указываем версию docker-compose
 
 services:
   db:
-    image: mysql:5.7
-    restart: always
+    image: mysql:5.7 # Используем образ MySQL версии 5.7
+    restart: always # Автоматический перезапуск контейнера в случае сбоя
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: new_password # Устанавливаем пароль root-пользователя MySQL
+      MYSQL_DATABASE: mydatabase # Создаём базу данных
+      MYSQL_USER: myuser # Создаём пользователя
+      MYSQL_PASSWORD: mypassword # Устанавливаем пароль для пользователя
     volumes:
-      - db_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql # Создаём volume для хранения данных БД
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Подключаем SQL-скрипт для инициализации базы
     ports:
-      - "3306:3306"
+      - "3306:3306" # Пробрасываем порт MySQL
 
   web:
-    image: php:7.4-apache
-    restart: always
+    image: php:7.4-apache # Используем образ PHP 7.4 с Apache
+    restart: always # Автоматический перезапуск контейнера в случае сбоя
     depends_on:
-      - db
+      - db # Контейнер web запускается после контейнера db
     volumes:
-      - ./www:/var/www/html
+      - ./www:/var/www/html # Монтируем папку с веб-контентом внутрь контейнера
     ports:
-      - "8080:80"
+      - "8080:80" # Пробрасываем порт 8080 на локальную машину
     environment:
-      - MYSQL_HOST=db
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=mydatabase
-
+      - MYSQL_HOST=db # Определяем имя хоста для подключения к БД
+      - MYSQL_USER=user # Определяем пользователя для БД
+      - MYSQL_PASSWORD=password # Определяем пароль пользователя
+      - MYSQL_DATABASE=mydatabase # Определяем имя базы данных
+    command: docker-php-ext-install mysqli && apache2-foreground # Добавляем установку mysqli
 volumes:
-  db_data:
+  db_data: # Создаём volume для хранения данных БД
